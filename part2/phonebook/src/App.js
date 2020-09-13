@@ -3,27 +3,28 @@ import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
 import axios from 'axios';
+import personService from './services/persons'
 
 
 const App = () => {
-  const [ persons, setPersons ] = useState([
-    { 
+  const [persons, setPersons] = useState([
+    {
       name: 'Arto Hellas',
-      number: '040-1234567' 
+      number: '040-1234567'
     }
-  ]) 
- 
+  ])
 
-  const [ newName, setNewName ] = useState('')
-  const [ newNumber, setNewNumber ] = useState('')
-  const [ newSearch, setNewSearch ] = useState('')
-  const [ showAll, setShowAll ] = useState(true)
+
+  const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
+  const [newSearch, setNewSearch] = useState('')
+  const [showAll, setShowAll] = useState(true)
 
 
   useEffect(() => {
     console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
+    personService
+      .getAll()
       .then(response => {
         console.log('promise fulfilled')
         setPersons(response.data)
@@ -42,17 +43,28 @@ const App = () => {
     const match = persons.filter((person) => person.name == newName)
 
     if (match.length == 0) {
-      setPersons(persons.concat(newPerson))
-
-      setNewName('')
-      setNewNumber('')
+      personService
+        .create(newPerson)
+        .then(response => {
+          setPersons(persons.concat(response.data))
+          setNewName('')
+          setNewNumber('')
+        })
 
     }
     else {
-      alert(newName + " is already added to phonebook")
+      const result = window.confirm(newName + " is already added to phonebook would you like to update?")
+      if(result) {
+        personService
+        .update(match[0].id, newPerson)
+        .then(response => {
+          setNewName('')
+          setNewNumber('')
+        })
+      }
     }
 
-    
+
   }
 
   const handleNameOnChange = (event) => {
@@ -66,7 +78,7 @@ const App = () => {
   const handleSearchOnChange = (event) => {
     setNewSearch(event.target.value)
 
-    if((event.target.value).length == 0) {
+    if ((event.target.value).length == 0) {
       setShowAll(true)
     }
     else {
@@ -74,25 +86,37 @@ const App = () => {
     }
   }
 
+  const handleDeleteNumber = (event) => {
+    //console.log("deleting", event.target.value)
+    const result = window.confirm("would you like to delete?")
+    if(result) {
+      personService
+      .deletePerson(event.target.value)
+      .then(response => {
+       
+      })
+    }
+  }
+
   const array = showAll ? persons : persons.filter((person) => person.name.includes(newSearch))
 
-
+  console.log(array)
 
   return (
     <div>
       <h2>Phonebook</h2>
 
-      <Filter newSearch={newSearch} handleSearchOnChange={handleSearchOnChange}/>
+      <Filter newSearch={newSearch} handleSearchOnChange={handleSearchOnChange} />
 
       <br></br>
-      
 
-      <PersonForm addPerson={addPerson} handleNameOnChange={handleNameOnChange} handleNumberOnChange={handleNumberOnChange} newName={newName} newNumber={newNumber}/>
+
+      <PersonForm addPerson={addPerson} handleNameOnChange={handleNameOnChange} handleNumberOnChange={handleNumberOnChange} newName={newName} newNumber={newNumber} />
 
       <h2>Numbers</h2>
       ...
 
-      <Persons array={array} />
+      <Persons array={array} handleDeleteNumber={handleDeleteNumber} />
     </div>
   )
 }
