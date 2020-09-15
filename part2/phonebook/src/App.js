@@ -2,23 +2,21 @@ import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
+import Notification from './components/Notification';
 import axios from 'axios';
 import personService from './services/persons'
 
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    {
-      name: 'Arto Hellas',
-      number: '040-1234567'
-    }
-  ])
+  const [persons, setPersons] = useState([])
 
 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newSearch, setNewSearch] = useState('')
   const [showAll, setShowAll] = useState(true)
+  const [notification, setNotification] = useState(null)
+
 
 
   useEffect(() => {
@@ -27,6 +25,8 @@ const App = () => {
       .getAll()
       .then(response => {
         console.log('promise fulfilled')
+        console.log(response.data)
+
         setPersons(response.data)
       })
   }, [])
@@ -50,17 +50,43 @@ const App = () => {
           setNewName('')
           setNewNumber('')
         })
+        .catch(error => {
+          setNotification(
+            `Could not add`
+          )
+          setTimeout(() => {
+            setNotification(null)
+          }, 5000)
+        })
+
+      setNotification("Successfully added!")
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
 
     }
     else {
       const result = window.confirm(newName + " is already added to phonebook would you like to update?")
-      if(result) {
+      if (result) {
         personService
-        .update(match[0].id, newPerson)
-        .then(response => {
-          setNewName('')
-          setNewNumber('')
-        })
+          .update(match[0].id, newPerson)
+          .then(response => {
+            setNewName('')
+            setNewNumber('')
+          })
+          .catch(error => {
+            setNotification(
+              `Could not update`
+            )
+            setTimeout(() => {
+              setNotification(null)
+            }, 5000)
+          })
+
+        setNotification("Successfully updated!")
+        setTimeout(() => {
+          setNotification(null)
+        }, 5000)
       }
     }
 
@@ -89,12 +115,12 @@ const App = () => {
   const handleDeleteNumber = (event) => {
     //console.log("deleting", event.target.value)
     const result = window.confirm("would you like to delete?")
-    if(result) {
+    if (result) {
       personService
-      .deletePerson(event.target.value)
-      .then(response => {
-       
-      })
+        .deletePerson(event.target.value)
+        .then(response => {
+
+        })
     }
   }
 
@@ -109,6 +135,8 @@ const App = () => {
       <Filter newSearch={newSearch} handleSearchOnChange={handleSearchOnChange} />
 
       <br></br>
+
+      <Notification message={notification} />
 
 
       <PersonForm addPerson={addPerson} handleNameOnChange={handleNameOnChange} handleNumberOnChange={handleNumberOnChange} newName={newName} newNumber={newNumber} />

@@ -5,7 +5,7 @@ const Filter = (props) => {
 
     return (
         <div>
-          filter shown with: <input value={props.newSearch} onChange={props.handleSearchOnChange}/>
+          Filter Shown With: <input value={props.newSearch} onChange={props.handleSearchOnChange}/>
         </div>
     )
 }
