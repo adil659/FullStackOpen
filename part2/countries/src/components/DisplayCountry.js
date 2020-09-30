@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
+import CountryWeather from './CountryWeather';
 
 
 const DisplayCountry = (props) => {
-    const api_key = process.env.REACT_APP_API_KEY
+    const api_key = "a18905a22c04e9896f33606f46144316"
     const [weather, setWeather] = useState({})
 
 
@@ -12,17 +13,13 @@ const DisplayCountry = (props) => {
         axios
             .get(`http://api.weatherstack.com/current?access_key=${api_key}&query=${props.details.capital}`)
             .then(response => {
-                console.log(response.data)
+                console.log("weather", response.data)
                 setWeather(response.data)
             })
     }, [])
 
-    if (JSON.stringify(weather) === '{}') {
-        return (
-            <div></div>
-        )
-    }
-    else {
+    console.log("the waeragt", weather)
+ 
         return (
             <div>
 
@@ -36,18 +33,11 @@ const DisplayCountry = (props) => {
                 </ul>
                 <img src={props.details.flag}></img>
                 <br></br>
-                <h3>Weather in {props.details.capital} celsius</h3>
-                <h4>Temperature: {weather.current.temperature}</h4>
-                <div>
-                    {weather.current.weather_icons.map((icon) => <img key={icon} src={icon}></img>)}
-                </div>
-
-                <p>Wind: {weather.current.wind_speed} mph direction {weather.current.wind_dir}</p>
-
-
+                
+                <CountryWeather weather={weather} details={props.details}/>
             </div>
         )
-    }
+    
 
 }
 

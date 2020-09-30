@@ -51,6 +51,7 @@ const App = () => {
           setNewNumber('')
         })
         .catch(error => {
+          console.log(error.response.data)
           setNotification(
             `Could not add`
           )
@@ -75,8 +76,9 @@ const App = () => {
             setNewNumber('')
           })
           .catch(error => {
+            console.log(error.response)
             setNotification(
-              `Could not update`
+              error.response.data
             )
             setTimeout(() => {
               setNotification(null)

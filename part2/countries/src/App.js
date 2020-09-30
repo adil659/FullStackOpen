@@ -33,7 +33,7 @@ function App() {
     setClicked(event.target.value)
   }
 
-  const matches = countries.filter((country) => country.name.includes(newSearch))
+  const matches = countries.filter((country) => country.name.toLowerCase().includes(newSearch.toLowerCase()))
   
   return (
     <div>
