@@ -1,22 +1,32 @@
 
 
-  export const voteNotification = (message) => {
+  export const voteNotification = (message, time) => {
     const messageDisplay = `you voted '${message}'`
-    return {
-      type: 'VOTE_NOTIFICATION',
-      data: { 
+    return async dispatch => {
+      dispatch ({
+        type: 'VOTE_NOTIFICATION',
+        data: { 
         messageDisplay
        }
+      })
+      setTimeout(() => {
+        dispatch(removeNotification())
+      }, time*1000);
     }
   }
 
-  export const createQuoteNotification = (message) => {
+  export const createQuoteNotification = (message, time) => {
     const messageDisplay = `'${message}' has been created`
-    return {
-      type: 'CREATE_NOTIFICATION',
-      data: { 
+    return async dispatch => {
+      dispatch ({
+        type: 'CREATE_NOTIFICATION',
+        data: { 
         messageDisplay
        }
+      })
+      setTimeout(() => {
+        dispatch(removeNotification())
+      }, time*1000);
     }
   }
 
