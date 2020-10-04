@@ -1,7 +1,9 @@
 
 
+  var timeoutID
   export const voteNotification = (message, time) => {
     const messageDisplay = `you voted '${message}'`
+    clearTimeout(timeoutID)
     return async dispatch => {
       dispatch ({
         type: 'VOTE_NOTIFICATION',
@@ -9,7 +11,7 @@
         messageDisplay
        }
       })
-      setTimeout(() => {
+      timeoutID = setTimeout(() => {
         dispatch(removeNotification())
       }, time*1000);
     }

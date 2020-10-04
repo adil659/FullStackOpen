@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { setFilter } from '../reducers/filterReducer'
 
 
-const AnecdoteFilter = () => {
+const AnecdoteFilter = (props) => {
 
     const dispatch = useDispatch()
-    const filter = useSelector(state => state.filter)
+    const filter = props.filter //useSelector(state => state.filter)
 
 
     const filterOnChange = (event) => {
@@ -21,4 +21,13 @@ const AnecdoteFilter = () => {
     )
 }
 
-export default AnecdoteFilter
+const mapStateToProps = (state) => {
+    // sometimes it is useful to console log from mapStateToProps
+    console.log(state)
+    return {
+      filter: state.filter
+    }
+  }
+
+  const ConnectedAnecdoteFilter = connect(mapStateToProps)(AnecdoteFilter)
+  export default ConnectedAnecdoteFilter  

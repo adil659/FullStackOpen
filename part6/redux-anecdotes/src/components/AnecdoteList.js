@@ -1,13 +1,13 @@
 import React from 'react'
 import { voteForQuote } from '../reducers/anecdoteReducer'
 import { voteNotification, removeNotification } from '../reducers/notificationReducer'
-import { useSelector, useDispatch } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 
 
-const AnecdoteList = () => {
+const AnecdoteList = (props) => {
     const dispatch = useDispatch()
-    const anecdotes = useSelector(state => state.anecdotes)
-    const filter = useSelector(state => state.filter)
+    const anecdotes = props.anecdotes //useSelector(state => state.anecdotes)
+    const filter = props.filter //useSelector(state => state.filter)
 
     console.log("current anecdotes: ", anecdotes)
 
@@ -39,4 +39,14 @@ const AnecdoteList = () => {
     )
 }
 
-export default AnecdoteList
+const mapStateToProps = (state) => {
+    // sometimes it is useful to console log from mapStateToProps
+    console.log(state)
+    return {
+      anecdotes: state.anecdotes,
+      filter: state.filter
+    }
+  }
+
+  const ConnectedAnecdoteList = connect(mapStateToProps)(AnecdoteList)
+  export default ConnectedAnecdoteList  

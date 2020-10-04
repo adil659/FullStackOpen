@@ -18,9 +18,6 @@ const AnecdoteForm = () => {
         dispatch(createAnecdote(content))
         
         dispatch(createQuoteNotification(content, 3))
-        setTimeout(() => {
-            dispatch(removeNotification())
-        }, 4000);
     
       }
 
