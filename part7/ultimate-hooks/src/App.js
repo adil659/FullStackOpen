@@ -26,6 +26,9 @@ const useResource = (baseUrl) => {
   const [resources, setResources] = useState([])
   const url = baseUrl
   // ...
+  useEffect(() => {
+    axios.get(baseUrl).then(response => setResources(response.data))
+  }, [])
 
   const create = (resource) => {
     // ...
